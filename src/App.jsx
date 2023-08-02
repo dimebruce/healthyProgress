@@ -19,7 +19,7 @@ function App() {
   const data = [
     //        Peso             Pecho              Cadera Gluteo                   Gemelos
     ["Date", "Weight", "IMC", "Chest", "Biceps", "Hip", "Buttock", "Quadriceps", "Twin"],
-    ['Aug 1', 97.2   , parseFloat(calculateIMC(97.2, height)), 0, 0, 0, 0, 0, 0],
+    ['Aug 1', 97.2   , parseFloat(calculateIMC(97.2, height)), 114.1, 42, 110, 112, 67, 44],
   ];
   
   const options = {
@@ -39,9 +39,10 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Healthy Progress</h1>
-      <h3>By dimebruce</h3>
-
+      <div> 
+        <h1>Healthy Progress</h1>
+        <h3>By dimebruce</h3>
+      </div>
       <Chart
       chartType="LineChart"
       width="100%"
