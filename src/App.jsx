@@ -20,6 +20,7 @@ function App() {
     //        Peso             Pecho              Cadera Gluteo                   Gemelos
     ["Date", "Weight", "IMC", "Chest", "Biceps", "Hip", "Buttock", "Quadriceps", "Twin"],
     ['Aug 1', 97.2   , parseFloat(calculateIMC(97.2, height)), 114.1, 42, 110, 112, 67, 44],
+    
   ];
   
   const options = {
