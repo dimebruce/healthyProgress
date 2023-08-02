@@ -42,4 +42,4 @@ Healthy Progress es una aplicación que te permite llevar un registro detallado 
 
 ¡Gracias por tu interés en Healthy Progress!
 
-© 2023 Hecho por [Tu Nombre](https://www.instagram.com/dimebruce)
+© 2023 Hecho por [dimebruce](https://www.instagram.com/dimebruce)
