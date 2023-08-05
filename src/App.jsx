@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
+import Menu from './components/Menu'
 import Chart from 'react-google-charts'
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
 
@@ -36,7 +40,8 @@ function App() {
 
   return (
     <>
-      <div>
+      <Menu/>
+      <div className='mt-5'>
         <a href="https://www.github.com/dimebruce" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
