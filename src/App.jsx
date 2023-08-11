@@ -21,6 +21,7 @@ function App() {
     ["Date", "Weight", "IMC", "Chest", "Biceps", "Hip", "Buttock", "Quadriceps", "Twin"],
     ['Aug 1', 97.2   , parseFloat(calculateIMC(97.2, height)), 114.1, 42, 110, 112, 67, 44],
     ['Aug 4', 95.25   , parseFloat(calculateIMC(95.25, height)), 113, 41, 106, 110, 65.4, 43],
+    ['Aug 11', 94.85   , parseFloat(calculateIMC(94.85, height)), 111, 41, 105, 111, 64, 42.1],
     
   ];
   
