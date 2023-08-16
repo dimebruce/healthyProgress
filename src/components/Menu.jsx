@@ -12,7 +12,7 @@ function Menu() {
             <Navbar.Brand href="#home">
               <img
                 alt=""
-                src="/vite.svg"
+                src="/muscle.png"
                 width="30"
                 height="30"
                 className="d-inline-block align-top"

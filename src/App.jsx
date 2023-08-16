@@ -142,10 +142,10 @@ function App() {
         </div>
       </div>
       <div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Historical Lost Weight: {calculateHistoricalWeightLost().toFixed(2)} kg</li>
-          <li class="list-group-item">Last Lost Weight: {calculateWeightLostLastRecord().toFixed(2)} kg</li>
-          <li class="list-group-item">Goal: 85 kg</li>
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Historical Lost Weight: {calculateHistoricalWeightLost().toFixed(2)} kg</li>
+          <li className="list-group-item">Last Lost Weight: {calculateWeightLostLastRecord().toFixed(2)} kg</li>
+          <li className="list-group-item">Goal: 85 kg</li>
         </ul>
       </div>
       <Chart
