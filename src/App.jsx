@@ -23,6 +23,7 @@ function App() {
     ["Aug 1", 97.2],
     ["Aug 4", 95.25],
     ["Aug 11", 94.85],
+    ["Aug 19", 94.90],
   ];
 
   const data = [
