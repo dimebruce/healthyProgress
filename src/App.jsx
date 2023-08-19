@@ -17,6 +17,7 @@ const calculateIMC = (weight, height) => {
 function App() {
   // mi estatura
   const [height, setHeight] = useState(163);
+  const [goalWeight, setGoalWeight] = useState(90); // Peso objetivo
 
   const weightTest = [
     ["Date", "Weight"],
@@ -121,7 +122,6 @@ function App() {
     if (data.length === 0) return 0;
 
     const currentWeight = data[data.length - 1][1]; // Peso actual (última fila, segunda columna)
-    const goalWeight = 85; // Peso objetivo
 
     const initialWeight = data[1][1]; // Peso inicial (segunda fila, segunda columna)
     const weightLost = initialWeight - currentWeight;
@@ -155,21 +155,35 @@ function App() {
       </div>
       <div>
         <ul className="list-group list-group-flush">
-        <li className="list-group-item">
-  Historical Lost Weight:{" "}
-  <span className={calculateHistoricalWeightLost() >= 0 ? "text-success" : "text-danger"}>
-    {calculateHistoricalWeightLost() >= 0 ? "👇😁 " : "☝️😡 "}
-    {calculateHistoricalWeightLost().toFixed(2)} kg
-  </span>
-</li>
-<li className="list-group-item">
-  Last Lost Weight:{" "}
-  <span className={calculateWeightLostLastRecord() >= 0 ? "text-success" : "text-danger"}>
-    {calculateWeightLostLastRecord() >= 0 ? "👇😁 " : "☝️😡 "}
-    {calculateWeightLostLastRecord().toFixed(2)} kg
-  </span>
-</li>
-          <li className="list-group-item">Goal: 85 kg</li>
+          <li className="list-group-item">
+            Historical Lost Weight:{" "}
+            <span
+              className={
+                calculateHistoricalWeightLost() >= 0
+                  ? "text-success"
+                  : "text-danger"
+              }
+            >
+              {calculateHistoricalWeightLost() >= 0 ? "👇😁 " : "☝️😡 "}
+              {calculateHistoricalWeightLost().toFixed(2)} kg
+            </span>
+          </li>
+          <li className="list-group-item">
+            Last Lost Weight:{" "}
+            <span
+              className={
+                calculateWeightLostLastRecord() >= 0
+                  ? "text-success"
+                  : "text-danger"
+              }
+            >
+              {calculateWeightLostLastRecord() >= 0 ? "👇😁 " : "☝️😡 "}
+              {calculateWeightLostLastRecord().toFixed(2)} kg
+            </span>
+          </li>
+          <li className="list-group-item">
+            Goal: <span className="text-primary">{goalWeight} kg</span>{" "}
+          </li>
         </ul>
       </div>
       <Chart
