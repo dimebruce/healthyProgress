@@ -69,6 +69,17 @@ function App() {
       111,
       64,
       42.1,
+    ],,
+    [
+      "Aug 19",
+      94.90,
+      parseFloat(calculateIMC(94.90, height)),
+      111,
+      41,
+      106,
+      113,
+      62,
+      43,
     ],
   ];
 
