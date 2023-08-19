@@ -158,14 +158,14 @@ function App() {
         <li className="list-group-item">
   Historical Lost Weight:{" "}
   <span className={calculateHistoricalWeightLost() >= 0 ? "text-success" : "text-danger"}>
-    {calculateHistoricalWeightLost() >= 0 ? "👇😁" : "☝️😡"}
+    {calculateHistoricalWeightLost() >= 0 ? "👇😁 " : "☝️😡 "}
     {calculateHistoricalWeightLost().toFixed(2)} kg
   </span>
 </li>
 <li className="list-group-item">
   Last Lost Weight:{" "}
   <span className={calculateWeightLostLastRecord() >= 0 ? "text-success" : "text-danger"}>
-    {calculateWeightLostLastRecord() >= 0 ? "👇😁" : "☝️😡"}
+    {calculateWeightLostLastRecord() >= 0 ? "👇😁 " : "☝️😡 "}
     {calculateWeightLostLastRecord().toFixed(2)} kg
   </span>
 </li>
