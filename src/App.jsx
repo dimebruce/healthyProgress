@@ -23,7 +23,7 @@ function App() {
     ["Aug 1", 97.2],
     ["Aug 4", 95.25],
     ["Aug 11", 94.85],
-    ["Aug 19", 94.90],
+    ["Aug 19", 94.9],
   ];
 
   const data = [
@@ -73,8 +73,8 @@ function App() {
     ],
     [
       "Aug 19",
-      94.90,
-      parseFloat(calculateIMC(94.90, height)),
+      94.9,
+      parseFloat(calculateIMC(94.9, height)),
       111,
       41,
       106,
@@ -155,8 +155,20 @@ function App() {
       </div>
       <div>
         <ul className="list-group list-group-flush">
-          <li className="list-group-item">Historical Lost Weight: {calculateHistoricalWeightLost().toFixed(2)} kg</li>
-          <li className="list-group-item">Last Lost Weight: {calculateWeightLostLastRecord().toFixed(2)} kg</li>
+        <li className="list-group-item">
+  Historical Lost Weight:{" "}
+  <span className={calculateHistoricalWeightLost() >= 0 ? "text-success" : "text-danger"}>
+    {calculateHistoricalWeightLost() >= 0 ? "👇😁" : "☝️😡"}
+    {calculateHistoricalWeightLost().toFixed(2)} kg
+  </span>
+</li>
+<li className="list-group-item">
+  Last Lost Weight:{" "}
+  <span className={calculateWeightLostLastRecord() >= 0 ? "text-success" : "text-danger"}>
+    {calculateWeightLostLastRecord() >= 0 ? "👇😁" : "☝️😡"}
+    {calculateWeightLostLastRecord().toFixed(2)} kg
+  </span>
+</li>
           <li className="list-group-item">Goal: 85 kg</li>
         </ul>
       </div>
