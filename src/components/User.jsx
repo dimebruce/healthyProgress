@@ -87,6 +87,17 @@ const User = () => {
       66,
       43,
     ],
+    [
+      "Sep 9",
+      93.50,
+      parseFloat(calculateIMC(93.50, height)),
+      110,
+      41,
+      105,
+      112,
+      66,
+      43,
+    ],
   ];
 
   const options = {
