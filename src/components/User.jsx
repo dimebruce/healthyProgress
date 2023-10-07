@@ -19,6 +19,7 @@ const User = () => {
     ["Aug 27", 95.25],
     ["Sep 9", 93.50],
     ["Sep 23", 92.90],
+    ["Oct 7", 91.6],
   ];
 
   const data = [
@@ -103,6 +104,17 @@ const User = () => {
       "Sep 23",
       92.90,
       parseFloat(calculateIMC(92.90, height)),
+      110,
+      41,
+      105,
+      112,
+      66,
+      43,
+    ],
+    [
+      "Oct 7",
+      91.60,
+      parseFloat(calculateIMC(91.60, height)),
       110,
       41,
       105,
