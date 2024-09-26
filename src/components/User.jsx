@@ -9,7 +9,7 @@ const User = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState([]);
-  const [goalWeight] = useState(80); // Definir una meta de peso aquí
+  const [goalWeight] = useState(90); // Definir una meta de peso aquí
 
   // Obtener todos los datos de usuario de Firestore y ordenarlos por fecha
   const fetchUserData = async () => {
