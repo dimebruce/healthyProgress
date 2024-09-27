@@ -1,52 +1,57 @@
-import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase'; // Importa la base de datos
-import { Chart } from 'react-google-charts'; // Import Chart component from react-google-charts
+import { Chart } from 'react-google-charts'; // Importar el componente Chart de react-google-charts
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css'; // Importar los estilos de CircularProgressbar
+import 'react-circular-progressbar/dist/styles.css'; // Importar estilos de CircularProgressbar
 
 const User = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState([]);
   const [goalWeight] = useState(90); // Definir una meta de peso aquí
 
-  // Obtener todos los datos de usuario de Firestore y ordenarlos por fecha
-  const fetchUserData = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "userData"));
+  // Obtener todos los datos de usuario de Firestore en tiempo real
+  const fetchUserData = () => {
+    const unsubscribe = onSnapshot(collection(db, "userData"), (querySnapshot) => {
       const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
         date: doc.data().date ? new Date(doc.data().date.seconds * 1000) : "",
       }));
 
-      // Ordenar los datos por fecha de forma ascendente
+      // Ordenar los datos por fecha
       const sortedData = data.sort((a, b) => a.date - b.date);
-
-      // Preparar los datos para el gráfico
-      const chartDataArray = sortedData.map((user) => [user.date.toLocaleDateString(), user.weight]);
-      setChartData([["Date", "Weight"], ...chartDataArray]);
-
       setUserData(sortedData);
       setLoading(false);
-    } catch (error) {
+    }, (error) => {
       console.error("Error fetching user data:", error);
-    }
+    });
+
+    // Cleanup: Dejar de escuchar los cambios cuando el componente se desmonta
+    return () => unsubscribe();
   };
 
   useEffect(() => {
     fetchUserData();
   }, []);
 
-  // Calcular la pérdida total de peso (peso inicial - peso actual)
+  // Calcular la pérdida de peso histórica (peso inicial - peso actual)
   const calculateHistoricalWeightLost = () => {
     if (userData.length > 1) {
       const initialWeight = userData[0].weight;
       const currentWeight = userData[userData.length - 1].weight;
-      return initialWeight - currentWeight;
+      const weightLost = initialWeight - currentWeight;
+
+      const emoji = weightLost > 0 ? "😊" : "😠";
+      const color = weightLost > 0 ? "green" : "red";
+
+      return (
+        <span style={{ color }}>
+          {weightLost.toFixed(2)} kg {emoji}
+        </span>
+      );
     }
-    return 0;
+    return <span>0 kg 😊</span>;
   };
 
   // Calcular la pérdida de peso del último registro (último peso - penúltimo peso)
@@ -54,43 +59,40 @@ const User = () => {
     if (userData.length > 1) {
       const lastWeight = userData[userData.length - 1].weight;
       const secondLastWeight = userData[userData.length - 2].weight;
-      return secondLastWeight - lastWeight;
+      const weightLost = secondLastWeight - lastWeight;
+
+      const emoji = weightLost > 0 ? "😊" : "😠";
+      const color = weightLost > 0 ? "green" : "red";
+
+      return (
+        <span style={{ color }}>
+          {weightLost.toFixed(2)} kg {emoji}
+        </span>
+      );
     }
-    return 0;
+    return <span>0 kg 😊</span>;
   };
 
-  // Calcular el porcentaje del progreso hacia la meta de peso
+  // Calcular el porcentaje de progreso hacia la meta
   const calculatePercentageToGoal = () => {
     if (userData.length > 0) {
       const currentWeight = userData[userData.length - 1].weight;
       const initialWeight = userData[0].weight;
 
-      // Verificar si el peso inicial ya es menor o igual que la meta
-      if (initialWeight <= goalWeight) {
-        return 100; // Si el peso inicial es menor o igual a la meta, se considera como 100% de progreso
-      }
-
       const weightLost = initialWeight - currentWeight;
       const totalToLose = initialWeight - goalWeight;
 
-      // Si el usuario ya alcanzó o superó la meta, devolver 100%
-      if (currentWeight <= goalWeight) {
-        return 100;
-      }
-
-      // Evitar divisiones por 0 o valores negativos y retornar el porcentaje
       const progress = (weightLost / totalToLose) * 100;
       return Math.max(0, Math.min(progress, 100)); // Limitar el valor entre 0% y 100%
     }
-
-    return 0; // Retornar 0% si no hay datos de usuario disponibles
+    return 0; // Si no hay datos
   };
 
-  // Determinar el color de la barra de progreso según el porcentaje
+  // Determinar el color de la barra de progreso
   const getProgressBarColor = () => {
     const percentage = calculatePercentageToGoal();
     if (percentage === 0) {
-      return "#dc3545"; // Rojo para progreso negativo o 0
+      return "#dc3545"; // Rojo si el progreso es 0
     } else if (percentage > 0 && percentage < 50) {
       return "#ffc107"; // Amarillo si el progreso es bajo (<50%)
     } else {
@@ -98,17 +100,17 @@ const User = () => {
     }
   };
 
-  // Función para calcular el color de un punto de datos
-function getColor(weight, previousWeight) {
-  return weight > previousWeight ? '#FF0000' : '#0000FF'; // Rojo si aumenta, azul si disminuye
-}
-
   if (loading) {
     return <p>Cargando datos...</p>;
   }
 
+  // Preparar los datos para el gráfico
+  const chartData = userData.map((user) => [user.date.toLocaleDateString(), user.weight]);
+  const formattedChartData = [["Date", "Weight"], ...chartData];
+
   return (
     <div>
+      <h2>Progreso de Peso</h2>
 
       {/* Circular Progress Bar */}
       <div className="d-flex justify-content-center my-4">
@@ -120,9 +122,8 @@ function getColor(weight, previousWeight) {
             styles={buildStyles({
               rotation: 1 / 2 + 1 / 8,
               trailColor: "#f8f9fa",
-              backgroundColor: "#000",
-              textColor: getProgressBarColor(), // Cambiar el color del texto según el progreso
-              pathColor: getProgressBarColor(), // Cambiar el color de la barra según el progreso
+              textColor: getProgressBarColor(), // Cambiar color de texto según el progreso
+              pathColor: getProgressBarColor(), // Cambiar color de barra según el progreso
               textSize: "13px",
             })}
           />
@@ -133,30 +134,10 @@ function getColor(weight, previousWeight) {
       <div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
-            Historical Lost Weight:{" "}
-            <span
-              className={
-                calculateHistoricalWeightLost() >= 0
-                  ? "text-success"
-                  : "text-danger"
-              }
-            >
-              {calculateHistoricalWeightLost() >= 0 ? "👇😁 " : "☝️😡 "}
-              {calculateHistoricalWeightLost().toFixed(2)} kg
-            </span>
+            Historical Lost Weight: {calculateHistoricalWeightLost()}
           </li>
           <li className="list-group-item">
-            Last Lost Weight:{" "}
-            <span
-              className={
-                calculateWeightLostLastRecord() >= 0
-                  ? "text-success"
-                  : "text-danger"
-              }
-            >
-              {calculateWeightLostLastRecord() >= 0 ? "👇😁 " : "☝️😡 "}
-              {calculateWeightLostLastRecord().toFixed(2)} kg
-            </span>
+            Last Lost Weight: {calculateWeightLostLastRecord()}
           </li>
           <li className="list-group-item">
             Goal: <span className="text-primary">{goalWeight} kg</span>
@@ -164,28 +145,29 @@ function getColor(weight, previousWeight) {
         </ul>
       </div>
 
+      {/* Gráfico de progreso de peso */}
       <Chart
-  chartType="LineChart"
-  width="100%"
-  height="400px"
-  data={chartData}
-  options={{
-    curveType: "function",
-    title: "Progress",
-    hAxis: {
-      title: "Date",
-      slantedText: true,
-      slantedTextAngle: 45,
-    },
-    vAxis: { title: "Weight (kg)" },
-    legend: { position: "bottom" },
-    explorer: {
-      axis: 'horizontal',
-      actions: ['dragToZoom', 'rightClickToReset']
-    },
-    colors: ['#3366cc'] // Color rojo para la única serie de datos
-  }}
-/>
+        chartType="LineChart"
+        width="100%"
+        height="400px"
+        data={formattedChartData}
+        options={{
+          curveType: "function",
+          title: "Progress",
+          hAxis: {
+            title: "Date",
+            slantedText: true,
+            slantedTextAngle: 45,
+          },
+          vAxis: { title: "Weight (kg)" },
+          legend: { position: "bottom" },
+          explorer: {
+            axis: 'horizontal',
+            actions: ['dragToZoom', 'rightClickToReset'],
+          },
+          colors: ['#3366cc'], // Azul para el gráfico
+        }}
+      />
     </div>
   );
 };
